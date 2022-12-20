@@ -11,6 +11,7 @@ const Routes = () => {
         <Route index element={<Home />} />
         <Route path="/women" element={<Women />} />
         <Route path="/men" element={<Men />} />
+        <Route path="/product/:id" />
       </Route>
     </ReactRouterRoutes>
   );
