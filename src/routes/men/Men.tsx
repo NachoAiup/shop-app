@@ -18,7 +18,7 @@ const Men = () => {
   return (
     <ImageList sx={{ width: 500, height: 450 }}>
       <ImageListItem key="Subheader" cols={2}>
-        <ListSubheader component="div">December</ListSubheader>
+        <ListSubheader component="div">December mennn</ListSubheader>
       </ImageListItem>
       {products?.map((item) => (
         <ImageListItem key={item.image}>
