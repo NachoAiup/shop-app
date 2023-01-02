@@ -10,14 +10,17 @@ import Link from "../../components/Link/Link";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { StyledContainer, StyledImageListItem } from "./Style";
 
-const Men = () => {
+const Favorites = () => {
   const [products, setProducts] = useState<Products>();
   const [favoriteList, setFavoriteList] = useState<Number[]>([]);
   let storageFavList = localStorage.getItem("favoritesList");
 
   useEffect(() => {
-    getMenProducts().then((res) => setProducts(res));
-  }, []);
+    getMenProducts().then((res) => {
+      let a = res?.filter((x) => favoriteList.includes(x.id));
+      setProducts(a);
+    });
+  }, [products]);
 
   useEffect(() => {
     let newArr;
@@ -44,7 +47,7 @@ const Men = () => {
         cols={4}
       >
         <ImageListItem key="Subheader" cols={4}>
-          <Typography variant="h4">Mens Clothes</Typography>
+          <Typography variant="h4">Favorites </Typography>
         </ImageListItem>
         {products?.map((item) => (
           <Link to={`/product/${item.id}`} key={item.image}>
@@ -80,4 +83,4 @@ const Men = () => {
   );
 };
 
-export default Men;
+export default Favorites;

@@ -5,9 +5,21 @@ export interface Product {
   title: string;
   price: number;
   id: number;
+  description: string;
 }
 
 export type Products = Product[];
+
+export const getSingleProduct = async (id: string) => {
+  try {
+    const response = await axios.get<Product>(
+      `https://fakestoreapi.com/products/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const getMenProducts = async () => {
   try {
