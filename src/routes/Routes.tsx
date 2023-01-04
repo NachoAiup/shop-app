@@ -1,12 +1,14 @@
 import { Routes as ReactRouterRoutes, Route } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
 import Home from "../components/Home.tsx/Home";
-import Men from "./men";
-import Women from "./women";
+import Men from "./men/Men";
+import Women from "./women/Women";
 import Login from "./login/Login";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import Favorites from "./favorites/Favorites";
-import Details from "./details/details";
+import Details from "./details/Details";
+import SearchResults from "./search-results/SearchResults";
+import Bag from "./bag/Bag";
 
 const Routes = () => {
   return (
@@ -50,6 +52,22 @@ const Routes = () => {
           element={
             <ProtectedRoute>
               <Details />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <SearchResults />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bag"
+          element={
+            <ProtectedRoute>
+              <Bag />
             </ProtectedRoute>
           }
         />

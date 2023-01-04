@@ -12,8 +12,9 @@ import {
   StyledImageListItem,
   AppBarTypography,
 } from "./Style";
+import { Box, Button } from "@mui/material";
 
-const Favorites = () => {
+const Bag = () => {
   const [products, setProducts] = useState<Products>();
   const [favoriteList, setFavoriteList] = useState<Number[]>([]);
   let storageFavList = localStorage.getItem("favoritesList");
@@ -45,7 +46,7 @@ const Favorites = () => {
 
   return (
     <StyledContainer>
-      <AppBarTypography variant="h5">FAVORITES </AppBarTypography>
+      <AppBarTypography variant="h5">CHECKOUT </AppBarTypography>
       <ImageList gap={8} cols={4} sx={{ maxWidth: "1200px" }}>
         <ImageListItem key="Subheader" cols={4}></ImageListItem>
         {products?.map((item) => (
@@ -78,9 +79,27 @@ const Favorites = () => {
           </Link>
         ))}
       </ImageList>
-      {products && !products?.length && <div>No favorites yet</div>}
+      {products && !products?.length && (
+        <Box>
+          <div>Your bag is empty!</div>
+          <Link to="/home">
+            <Button
+              variant="contained"
+              color="success"
+              sx={{
+                background:
+                  "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
+                marginTop: 2,
+              }}
+              fullWidth
+            >
+              START LOOKING
+            </Button>
+          </Link>
+        </Box>
+      )}
     </StyledContainer>
   );
 };
 
-export default Favorites;
+export default Bag;

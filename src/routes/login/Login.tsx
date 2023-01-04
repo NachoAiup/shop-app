@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -19,6 +19,11 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    token && navigate("/home");
+  });
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -46,6 +51,7 @@ const Login = () => {
           id="outlined-basic"
           label="Username"
           variant="outlined"
+          type="text"
           onChange={(e) => setUsername(e.target.value)}
           required
         />

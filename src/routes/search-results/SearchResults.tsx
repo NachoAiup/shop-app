@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { getAllProducts, Products } from "../../api/products";
+import { useEffect, useMemo, useState } from "react";
+import { Products } from "../../api/products";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
@@ -12,18 +12,27 @@ import {
   StyledImageListItem,
   AppBarTypography,
 } from "./Style";
+import { getFilteredProduct } from "../../api/products";
+import { useLocation } from "react-router-dom";
 
-const Favorites = () => {
+function useQuery() {
+  const { search } = useLocation();
+
+  return useMemo(() => new URLSearchParams(search), [search]);
+}
+
+const SearchResults = () => {
   const [products, setProducts] = useState<Products>();
   const [favoriteList, setFavoriteList] = useState<Number[]>([]);
   let storageFavList = localStorage.getItem("favoritesList");
+  const location = useLocation();
+
+  const query = useQuery();
+  const keywords = query.get("keywords")?.split(" ");
 
   useEffect(() => {
-    getAllProducts().then((res) => {
-      let a = res?.filter((x) => favoriteList.includes(x.id));
-      setProducts(a);
-    });
-  }, [products]);
+    keywords && getFilteredProduct(keywords).then((res) => setProducts(res));
+  }, [location]);
 
   useEffect(() => {
     let newArr;
@@ -45,7 +54,7 @@ const Favorites = () => {
 
   return (
     <StyledContainer>
-      <AppBarTypography variant="h5">FAVORITES </AppBarTypography>
+      <AppBarTypography variant="h5">RESULTS </AppBarTypography>
       <ImageList gap={8} cols={4} sx={{ maxWidth: "1200px" }}>
         <ImageListItem key="Subheader" cols={4}></ImageListItem>
         {products?.map((item) => (
@@ -78,9 +87,9 @@ const Favorites = () => {
           </Link>
         ))}
       </ImageList>
-      {products && !products?.length && <div>No favorites yet</div>}
+      {products && !products?.length && <div>No results found</div>}
     </StyledContainer>
   );
 };
 
-export default Favorites;
+export default SearchResults;

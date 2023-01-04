@@ -4,11 +4,14 @@ import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
 import IconButton from "@mui/material/IconButton";
-import { Typography } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Link from "../../components/Link/Link";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { StyledContainer, StyledImageListItem } from "./Style";
+import {
+  StyledContainer,
+  StyledImageListItem,
+  AppBarTypography,
+} from "./Style";
 
 const Men = () => {
   const [products, setProducts] = useState<Products>();
@@ -22,7 +25,7 @@ const Men = () => {
   useEffect(() => {
     let newArr;
     if (storageFavList) {
-      newArr = Array.from(storageFavList.replaceAll(",", ""));
+      newArr = storageFavList.split(",");
       newArr = newArr.map((x) => parseInt(x));
       setFavoriteList(newArr);
     }
@@ -39,13 +42,9 @@ const Men = () => {
 
   return (
     <StyledContainer>
-      <ImageList
-        sx={{ width: "70vw", height: "75vh", gap: "15px !important" }}
-        cols={4}
-      >
-        <ImageListItem key="Subheader" cols={4}>
-          <Typography variant="h4">Mens Clothes</Typography>
-        </ImageListItem>
+      <AppBarTypography variant="h5">MEN CLOTHES</AppBarTypography>
+      <ImageList gap={8} cols={4} sx={{ maxWidth: "1200px" }}>
+        <ImageListItem key="Subheader" cols={4}></ImageListItem>
         {products?.map((item) => (
           <Link to={`/product/${item.id}`} key={item.image}>
             <StyledImageListItem>

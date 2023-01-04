@@ -21,6 +21,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [login, setLogin] = useState<boolean>(false);
+  const [searchWords, setSearchWords] = useState<string>("");
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -28,6 +29,13 @@ const Header = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let URLSearchParams = searchWords;
+    navigate(`/search?keywords=${URLSearchParams}`);
+    setSearchWords("");
   };
 
   const token = localStorage.getItem("token");
@@ -55,11 +63,13 @@ const Header = () => {
         <Box sx={{ flexGrow: 1 }}></Box>
         {login && (
           <>
-            <Search>
+            <Search onSubmit={handleSubmit}>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
+                onChange={(e) => setSearchWords(e.target.value)}
+                value={searchWords}
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
               />
@@ -96,17 +106,18 @@ const Header = () => {
                 <FavoriteBorderIcon />
               </IconButton>
             </Link>
-            <div>
+            <Link to="/bag">
               <IconButton
                 size="large"
                 aria-label="shopping bag"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 color="inherit"
+                sx={{ color: "white" }}
               >
                 <ShoppingBagOutlinedIcon />
               </IconButton>
-            </div>
+            </Link>
           </>
         )}
       </Toolbar>
