@@ -6,7 +6,7 @@ import Women from "./women/Women";
 import Login from "./login/Login";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import Favorites from "./favorites/Favorites";
-import Details from "./details/Details";
+import Details from "./details/details";
 import SearchResults from "./search-results/SearchResults";
 import Bag from "./bag/Bag";
 

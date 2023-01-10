@@ -1,84 +1,88 @@
 import { useEffect, useState } from "react";
-import { getAllProducts, Products } from "../../api/products";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ImageListItemBar from "@mui/material/ImageListItemBar";
-import IconButton from "@mui/material/IconButton";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Products } from "../../api/products";
 import Link from "../../components/Link/Link";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import {
   StyledContainer,
-  StyledImageListItem,
   AppBarTypography,
 } from "./Style";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 const Bag = () => {
   const [products, setProducts] = useState<Products>();
-  const [favoriteList, setFavoriteList] = useState<Number[]>([]);
-  let storageFavList = localStorage.getItem("favoritesList");
-
-  useEffect(() => {
-    getAllProducts().then((res) => {
-      let a = res?.filter((x) => favoriteList.includes(x.id));
-      setProducts(a);
-    });
-  }, [products]);
+  let storageBagList = localStorage.getItem("bagList");
 
   useEffect(() => {
     let newArr;
-    if (storageFavList) {
-      newArr = storageFavList.split(",");
-      newArr = newArr.map((x) => parseInt(x));
-      setFavoriteList(newArr);
+    if (storageBagList) {
+      newArr = JSON.parse(storageBagList);
+      setProducts(newArr);
     }
-  }, [storageFavList]);
-
-  const handleClick = (e: React.MouseEvent<HTMLElement>, id: number) => {
-    e.preventDefault();
-    let favoriteElements: Number[] = !favoriteList.includes(id)
-      ? favoriteList.concat(id)
-      : favoriteList.filter((a) => a !== id);
-    setFavoriteList(favoriteElements);
-    localStorage.setItem("favoritesList", favoriteElements.toString());
-  };
+  }, [storageBagList]);
 
   return (
     <StyledContainer>
-      <AppBarTypography variant="h5">CHECKOUT </AppBarTypography>
-      <ImageList gap={8} cols={4} sx={{ maxWidth: "1200px" }}>
-        <ImageListItem key="Subheader" cols={4}></ImageListItem>
-        {products?.map((item) => (
-          <Link to={`/product/${item.id}`} key={item.image}>
-            <StyledImageListItem>
-              <img
-                src={`${item.image}?w=248&fit=crop&auto=format`}
-                srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                alt={item.title}
-                loading="lazy"
-              />
-              <ImageListItemBar
-                title={item.title}
-                subtitle={"$" + item.price}
-                actionIcon={
-                  <IconButton
-                    sx={{ color: "rgba(255, 255, 255, 0.54)" }}
-                    aria-label={`info about ${item.title}`}
-                    onClick={(e) => handleClick(e, item.id)}
-                  >
-                    {!favoriteList.includes(item.id) ? (
-                      <FavoriteBorderIcon />
-                    ) : (
-                      <FavoriteIcon />
-                    )}
-                  </IconButton>
-                }
-              />
-            </StyledImageListItem>
-          </Link>
-        ))}
-      </ImageList>
+      <AppBarTypography variant="h5" mb={4}>CHECKOUT </AppBarTypography>
+      {products && products?.length && (
+        <Box sx={{display:"flex"}}>
+          <Box>
+          {products?.map((item, index) => (
+            <Box
+              sx={{
+                width: 500,
+                height: 100,
+  boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+                margin: 1,
+                display: "flex",
+                gap: "5px",
+                p: 1,
+              }}
+            >
+              <Link to={`/product/${item.id}`} key={index}>
+                <img
+                  src={`${item.image}?w=248&fit=crop&auto=format`}
+                  srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                  alt={item.title}
+                  loading="lazy"
+                  style={{ maxHeight: "100px" }}
+                />
+              </Link>
+              <Box>
+                <Typography variant="h5">{item.title} </Typography>
+                <Button variant="contained" size="small">
+                  $ {item?.price}
+                </Button>
+                <Typography variant="body2">Size: {item.size} </Typography>
+              </Box>
+            </Box>
+          ))}
+          </Box>
+          <Box 
+              sx={{
+                width: 200,
+                height: 300,
+                boxShadow: "0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%)",
+                margin: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center",
+                p: 2
+              }}>
+            <Typography variant="h5" sx={{borderBottom: "1px solid gray", width: "100%"}}>TOTAL</Typography>
+
+            <Box>
+            <Typography variant="body1" sx={{width: "100%"}}>Sub-total: $112</Typography>
+            <Typography variant="body1" sx={{width: "100%"}}>Shipping: $</Typography>
+            </Box>
+              <Button
+                variant="contained"
+                color="success" 
+              >
+                CHECKOUT
+              </Button>
+          </Box>
+        </Box>
+      )}
       {products && !products?.length && (
         <Box>
           <div>Your bag is empty!</div>

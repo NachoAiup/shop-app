@@ -37,7 +37,7 @@ export const AppBarTypography = styled(Typography)`
   width: 100vw;
 `;
 
-export const StyledButtonsContainer = styled(Box)`
+export const StyledButtonsContainer = styled("form")`
   display: flex;
   justify-content: start;
   align-items: center;

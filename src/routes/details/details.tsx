@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Button,
   FormControl,
   InputLabel,
@@ -18,32 +19,38 @@ import {
   StyledButtonsContainer,
   StyledBodyContainer,
 } from "./Styles";
-
-type BagList = {
-  id: number;
-  size: string;
-}[];
+import CustomizedSnackbars from "./Snackbar";
 
 const Details = () => {
   const [product, setProduct] = useState<Product>();
   let { id } = useParams();
   const [size, setSize] = useState("");
-  const [bagList, setBagList] = useState<BagList>([]);
+  const [message, setMessage] = useState<AlertColor>();
+  const [open, setOpen] = useState(false);
 
   const handleChange = (e: SelectChangeEvent) => {
     setSize(e.target.value);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLElement>, id: number) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let oldElements = localStorage.getItem("bagList");
-    let bagElement = {
-      id,
-      size,
-    };
-    let bagElements = oldElements?.push(bagElement);
-    setBagList(bagElements);
-    localStorage.setItem("bagList", bagElements.toString());
+    try {
+      let oldElements = localStorage.getItem("bagList") || "[]";
+      let bagElement = {
+        id: product?.id,
+        image: product?.image,
+        title: product?.title,
+        price: product?.price,
+        size,
+      };
+      let bagElements = JSON.parse(oldElements).concat(bagElement);
+      localStorage.setItem("bagList", JSON.stringify(bagElements));
+      setMessage("success")
+      setOpen(true)
+    } catch(e){
+      setMessage("error")
+      setOpen(true)
+    }
   };
 
   useEffect(() => {
@@ -64,13 +71,14 @@ const Details = () => {
         <StyledProductInfoContainer>
           <Typography variant="h6">{product?.title}</Typography>
           <Button variant="contained">$ {product?.price}</Button>
-          <Typography variant="body2">{product?.description}</Typography>
-          <StyledButtonsContainer>
+          <Typography variant="body2" sx={{maxHeight: "300px", overflowY: "scroll"}} >{product?.description}</Typography>
+          <StyledButtonsContainer
+              onSubmit={(e) => handleSubmit(e)}>
             <FormControl
               variant="filled"
               size="small"
               sx={{ minWidth: 120, width: 200 }}
-            >
+            > 
               <InputLabel id="demo-simple-select-filled-label">
                 Select size
               </InputLabel>
@@ -79,6 +87,7 @@ const Details = () => {
                 id="demo-simple-select-filled"
                 value={size}
                 onChange={handleChange}
+                required
               >
                 <MenuItem value="">
                   <em>Select</em>
@@ -89,9 +98,9 @@ const Details = () => {
               </Select>
             </FormControl>
             <Button
-              onClick={(e) => handleClick(e, Number(id))}
               variant="contained"
               color="success"
+              type="submit"
               sx={{
                 background:
                   "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
@@ -102,6 +111,7 @@ const Details = () => {
           </StyledButtonsContainer>
         </StyledProductInfoContainer>
       </StyledContainer>
+            <CustomizedSnackbars open={open} setOpen={setOpen} message={message} />
     </StyledBodyContainer>
   );
 };

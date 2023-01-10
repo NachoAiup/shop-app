@@ -6,6 +6,7 @@ export interface Product {
   price: number;
   id: number;
   description: string;
+  size: string | undefined;
 }
 
 export type Products = Product[];
