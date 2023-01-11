@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getAllProducts, Products } from "../../api/products";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
@@ -14,32 +14,38 @@ import {
 } from "./Style";
 
 const Favorites = () => {
-  const [products, setProducts] = useState<Products>();
-  const [favoriteList, setFavoriteList] = useState<Number[]>([]);
-  let storageFavList = localStorage.getItem("favoritesList");
+  const [products, setProducts] = useState<Products>([]);
+  const [favoriteIdProductsList, setFavoriteIdProductsList] = useState<
+    Number[]
+  >(() => {
+    const storageFavList = localStorage.getItem("favoritesList");
+    if (storageFavList) {
+      return storageFavList.split(",").map((x) => parseInt(x));
+    }
+    return [];
+  });
+  const favoriteProducts = useMemo(
+    () => products.filter((x) => favoriteIdProductsList.includes(x.id)),
+    [favoriteIdProductsList, products]
+  );
 
   useEffect(() => {
-    getAllProducts().then((res) => {
-      let a = res?.filter((x) => favoriteList.includes(x.id));
-      setProducts(a);
-    });
+    if (!products.length) {
+      getAllProducts().then((res) => {
+        if (!products.length && res) setProducts(res);
+      });
+    }
   }, [products]);
 
-  useEffect(() => {
-    let newArr;
-    if (storageFavList) {
-      newArr = storageFavList.split(",");
-      newArr = newArr.map((x) => parseInt(x));
-      setFavoriteList(newArr);
-    }
-  }, [storageFavList]);
-
-  const handleClick = (e: React.MouseEvent<HTMLElement>, id: number) => {
+  const handleFavoriteButtonClick = (
+    e: React.MouseEvent<HTMLElement>,
+    id: number
+  ) => {
     e.preventDefault();
-    let favoriteElements: Number[] = !favoriteList.includes(id)
-      ? favoriteList.concat(id)
-      : favoriteList.filter((a) => a !== id);
-    setFavoriteList(favoriteElements);
+    let favoriteElements: Number[] = !favoriteIdProductsList.includes(id)
+      ? favoriteIdProductsList.concat(id)
+      : favoriteIdProductsList.filter((a) => a !== id);
+    setFavoriteIdProductsList(favoriteElements);
     localStorage.setItem("favoritesList", favoriteElements.toString());
   };
 
@@ -48,7 +54,7 @@ const Favorites = () => {
       <AppBarTypography variant="h5">FAVORITES </AppBarTypography>
       <ImageList gap={8} cols={4} sx={{ maxWidth: "1200px" }}>
         <ImageListItem key="Subheader" cols={4}></ImageListItem>
-        {products?.map((item) => (
+        {favoriteProducts?.map((item) => (
           <Link to={`/product/${item.id}`} key={item.image}>
             <StyledImageListItem>
               <img
@@ -64,9 +70,9 @@ const Favorites = () => {
                   <IconButton
                     sx={{ color: "rgba(255, 255, 255, 0.54)" }}
                     aria-label={`info about ${item.title}`}
-                    onClick={(e) => handleClick(e, item.id)}
+                    onClick={(e) => handleFavoriteButtonClick(e, item.id)}
                   >
-                    {!favoriteList.includes(item.id) ? (
+                    {!favoriteIdProductsList.includes(item.id) ? (
                       <FavoriteBorderIcon />
                     ) : (
                       <FavoriteIcon />
@@ -78,7 +84,9 @@ const Favorites = () => {
           </Link>
         ))}
       </ImageList>
-      {products && !products?.length && <div>No favorites yet</div>}
+      {favoriteProducts && !favoriteProducts?.length && (
+        <div>No favorites yet</div>
+      )}
     </StyledContainer>
   );
 };

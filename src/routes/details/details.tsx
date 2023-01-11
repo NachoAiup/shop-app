@@ -45,17 +45,17 @@ const Details = () => {
       };
       let bagElements = JSON.parse(oldElements).concat(bagElement);
       localStorage.setItem("bagList", JSON.stringify(bagElements));
-      setMessage("success")
-      setOpen(true)
-    } catch(e){
-      setMessage("error")
-      setOpen(true)
+      setMessage("success");
+      setOpen(true);
+    } catch (e) {
+      setMessage("error");
+      setOpen(true);
     }
   };
 
   useEffect(() => {
     id && getSingleProduct(id).then((res) => setProduct(res));
-  }, []);
+  }, [id]);
 
   return (
     <StyledBodyContainer>
@@ -71,14 +71,18 @@ const Details = () => {
         <StyledProductInfoContainer>
           <Typography variant="h6">{product?.title}</Typography>
           <Button variant="contained">$ {product?.price}</Button>
-          <Typography variant="body2" sx={{maxHeight: "300px", overflowY: "scroll"}} >{product?.description}</Typography>
-          <StyledButtonsContainer
-              onSubmit={(e) => handleSubmit(e)}>
+          <Typography
+            variant="body2"
+            sx={{ maxHeight: "300px", overflowY: "scroll" }}
+          >
+            {product?.description}
+          </Typography>
+          <StyledButtonsContainer onSubmit={(e) => handleSubmit(e)}>
             <FormControl
               variant="filled"
               size="small"
               sx={{ minWidth: 120, width: 200 }}
-            > 
+            >
               <InputLabel id="demo-simple-select-filled-label">
                 Select size
               </InputLabel>
@@ -111,7 +115,7 @@ const Details = () => {
           </StyledButtonsContainer>
         </StyledProductInfoContainer>
       </StyledContainer>
-            <CustomizedSnackbars open={open} setOpen={setOpen} message={message} />
+      <CustomizedSnackbars open={open} setOpen={setOpen} message={message} />
     </StyledBodyContainer>
   );
 };

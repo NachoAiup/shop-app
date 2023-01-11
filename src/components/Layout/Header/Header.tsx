@@ -31,6 +31,11 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let URLSearchParams = searchWords;
@@ -92,7 +97,7 @@ const Header = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem>Cerrar Sesion</MenuItem>
+                <MenuItem onClick={handleLogout}>Cerrar Sesion</MenuItem>
               </Menu>
             </div>
             <Link to="/favorites">

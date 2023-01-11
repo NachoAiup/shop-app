@@ -15,29 +15,26 @@ import {
 
 const Women = () => {
   const [products, setProducts] = useState<Products>();
-  const [favoriteList, setFavoriteList] = useState<Number[]>([]);
-  let storageFavList = localStorage.getItem("favoritesList");
+  const [favoriteIdProductsList, setFavoriteIdProductsList] = useState<
+    Number[]
+  >(() => {
+    const storageFavList = localStorage.getItem("favoritesList");
+    if (storageFavList) {
+      return storageFavList.split(",").map((x) => parseInt(x));
+    }
+    return [];
+  });
 
   useEffect(() => {
     getWomenProducts().then((res) => setProducts(res));
   }, []);
 
-  useEffect(() => {
-    let newArr;
-    if (storageFavList) {
-      newArr = storageFavList.split(",");
-      newArr = newArr.map((x) => parseInt(x));
-      setFavoriteList(newArr);
-    }
-  }, [storageFavList]);
-
   const handleClick = (e: React.MouseEvent<HTMLElement>, id: number) => {
     e.preventDefault();
-    let favoriteElements: Number[] = !favoriteList.includes(id)
-      ? favoriteList.concat(id)
-      : favoriteList.filter((a) => a !== id);
-    setFavoriteList(favoriteElements);
-    console.log(favoriteList, favoriteElements);
+    let favoriteElements: Number[] = !favoriteIdProductsList.includes(id)
+      ? favoriteIdProductsList.concat(id)
+      : favoriteIdProductsList.filter((a) => a !== id);
+    setFavoriteIdProductsList(favoriteElements);
     localStorage.setItem("favoritesList", favoriteElements.toString());
   };
 
@@ -64,7 +61,7 @@ const Women = () => {
                     aria-label={`info about ${item.title}`}
                     onClick={(e) => handleClick(e, item.id)}
                   >
-                    {!favoriteList.includes(item.id) ? (
+                    {!favoriteIdProductsList.includes(item.id) ? (
                       <FavoriteBorderIcon />
                     ) : (
                       <FavoriteIcon />

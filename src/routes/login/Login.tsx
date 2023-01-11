@@ -10,7 +10,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Link from "../../components/Link/Link";
 import { login } from "../../api/user";
 import { StyledPaper } from "./Styles";
 
@@ -86,21 +85,6 @@ const Login = () => {
         >
           LOG IN
         </Button>
-      </StyledPaper>
-      <StyledPaper>
-        <Link to="/">
-          <Button
-            variant="contained"
-            color="success"
-            sx={{
-              background:
-                "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
-            }}
-            fullWidth
-          >
-            REGISTER
-          </Button>
-        </Link>
       </StyledPaper>
     </Container>
   );
